@@ -1,0 +1,14 @@
+{
+  "name": "node-gallery",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "backbone": "*",
+    "bootstrap": "*",
+    "jquery": "*",
+    "lodash": "*",
+    "requirejs": "*"
+  },
+  "devDependencies": {
+  }
+}
