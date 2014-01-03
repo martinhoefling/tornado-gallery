@@ -1,3 +1,4 @@
 tornado
 sphinx
-pymdeco
+Pillow
+git+https://github.com/smarnach/pyexiftool.git#egg=pyexiftool

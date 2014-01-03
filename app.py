@@ -11,6 +11,7 @@ from tgallery.gallery_handler import GalleryHandler
 static_path = os.path.join(module_locator.module_path(), 'static')
 
 define('picture_path', default='~/Pictures', help='Picture path exposed as gallery root.')
+define('debug', default='off', help='Set to "on" if debug mode (autoreloading) should be enabled.')
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -20,11 +21,16 @@ class MainHandler(tornado.web.RequestHandler):
 
 def main():
     options.parse_command_line()
-    application = tornado.web.Application([
-        (r'/', MainHandler),
-        (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': static_path}),
-        (r'/gallery/(.*)', GalleryHandler, {'path': options.picture_path}),
-    ])
+    debug = options.debug == 'on'
+    application = tornado.web.Application(
+        [
+            (r'/', MainHandler),
+            (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': static_path}),
+            (r'/gallery/(.*)', GalleryHandler, {'path': options.picture_path}),
+        ],
+        gzip=True,
+        debug=debug
+    )
     application.listen(1234)
     tornado.ioloop.IOLoop.instance().start()
 
