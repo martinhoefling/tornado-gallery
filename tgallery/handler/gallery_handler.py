@@ -1,18 +1,14 @@
 import json
-import logging
 import os
 import re
 
 from tornado.web import StaticFileHandler, HTTPError
 
-from tgallery.picture import Picture
+from tgallery.helper.picture import Picture
 
 
-app_log = logging.getLogger("tornado.application")
-
-image_suffix = ('jpeg', 'jpg')
-
-thumbnail_regexp = re.compile(r'(.+)/thumbnail/(\d+)x(\d+)$')
+IMAGE_SUFFIX = ('jpeg', 'jpg')
+THUMBNAIL_REGEXP = re.compile(r'(.+)/thumbnail/(\d+)x(\d+)$')
 
 
 class GalleryHandler(StaticFileHandler):
@@ -26,7 +22,7 @@ class GalleryHandler(StaticFileHandler):
         self.y_size = None
 
         absolute_path = super(GalleryHandler, self).parse_url_path(url_path)
-        thumbnail = thumbnail_regexp.search(absolute_path)
+        thumbnail = THUMBNAIL_REGEXP.search(absolute_path)
 
         # this is not a file but matches thumbnail regexp and thumbnail group match is a file
         if not os.path.exists(absolute_path) and thumbnail and os.path.isfile(
@@ -74,7 +70,7 @@ class GalleryHandler(StaticFileHandler):
 
     @classmethod
     def _get_metadata(cls, filename):
-        if filename.lower().endswith(image_suffix):
+        if filename.lower().endswith(IMAGE_SUFFIX):
             return Picture(filename).get_metadata()
         else:
             return 'metadata not supported'

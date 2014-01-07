@@ -5,3 +5,4 @@ node_modules/**
 testgallery/**
 tgallery/static/components/**
 tgallery/static/stylesheets/style.css
+virtualenv

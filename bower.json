@@ -3,11 +3,15 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "backbone": "*",
-    "bootstrap": "*",
-    "jquery": "*",
+    "angular": "*",
+    "angular-scenario": "*",
+    "angular-route": "*",
+    "angular-mocks": "*",
+    "angular-bootstrap": "*",
+    "bootstrap-css": "*",
     "lodash": "*",
-    "requirejs": "*"
+    "requirejs": "*",
+    "requirejs-text": "*"
   },
   "devDependencies": {
   }
