@@ -3,3 +3,4 @@ sphinx
 Pillow
 nose
 logilab-astng
+coverage

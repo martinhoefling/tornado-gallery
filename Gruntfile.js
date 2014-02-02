@@ -7,6 +7,10 @@ module.exports = function (grunt) {
             options: {
                 verbose: true,
                 virtualenv: 'virtualenv',
+                tests: ['tgallery_tests'],
+                with_coverage: true,
+                cover_package: ['tgallery'],
+                cover_erase: true
             },
             main: { }
         },
