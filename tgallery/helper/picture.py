@@ -1,15 +1,13 @@
 from __future__ import division
-import StringIO
+import io
 
-from PIL.ExifTags import TAGS
 from PIL import Image
-import pyexiv2
+from libxmp import XMPFiles, XMPError
+from libxmp import consts as xmpconsts
 
+import logging
 
-TAGS[0x4746] = 'Rating'
-TAGS[0x4749] = 'RatingPercent'
-TAGS[0xc4a5] = 'PrintImageMatching'
-TAGS[0x000b] = 'ProcessingSoftware'
+LOG = logging.getLogger()
 
 
 class Picture(object):
@@ -19,17 +17,24 @@ class Picture(object):
         self.image = None
 
     def _read_metadata(self):
-        self.metadata = pyexiv2.ImageMetadata(self.filename)
-        self.metadata.read()
+        try:
+            self.metadata = XMPFiles(file_path=self.filename).get_xmp()
+        except XMPError:
+            LOG.debug('Error reading xmp metadata for %s', self.filename)
 
     def get_metadata(self):
         if not self.metadata:
             self._read_metadata()
-        meta_keys = self.metadata.exif_keys + self.metadata.iptc_keys + self.metadata.xmp_keys
-        return {key: self.metadata[key].raw_value for key in meta_keys}
+        try:
+            return {'rating': self.metadata.get_property(xmpconsts.XMP_NS_XMP, 'xmp:Rating')}
+        except XMPError:
+            return 'Metadata could not be read for {}'.format(self.filename)
 
     def _read_image(self):
-        self.image = Image.open(self.filename)
+        try:
+            self.image = Image.open(self.filename)
+        except OSError:
+            self.image = Image.new('RGB', (800, 800), 'white')
         self.image.load()
 
     def resize(self, x_size, y_size):
@@ -55,7 +60,7 @@ class Picture(object):
     def get_content(self):
         if not self.image:
             self._read_image()
-        buf = StringIO.StringIO()
+        buf = io.BytesIO()
         self.image.save(buf, format="JPEG")
         content = buf.getvalue()
         buf.close()

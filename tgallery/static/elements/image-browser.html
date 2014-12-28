@@ -1,0 +1,61 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/core-ajax/core-ajax.html">
+<link rel="import" href="directory-list.html">
+<link rel="import" href="image-list.html">
+
+<polymer-element name="image-browser" attributes="starturl">
+    <template>
+        <core-ajax
+                url="{{url}}"
+                auto
+                response="{{response}}"
+                error="{{error}}"
+                handleAs="json"
+                on-core-response={{handleResponse}}
+                on-core-error={{handleError}}
+        ></core-ajax>
+        <directory-list
+                directories="{{response.directories}}"
+                on-directory-selected="{{descendDirectory}}"
+                on-directory-up="{{ascendDirectory}}"
+                showdirup="{{!isstartdir}}"
+        ></directory-list>
+        <image-list
+                images="{{response.files}}"
+                basedir="{{url}}"
+                on-image-selected="{{showImage}}"
+                showdirup="{{!isstartdir}}"
+        ></image-list>
+    </template>
+    <script>
+        Polymer({
+            starturl: "/anotherurl/",
+            url: "/someurl/",
+            isstartdir: true,
+            handleResponse: function () {
+                console.log(this.response);
+            },
+            handleError: function () {
+                console.log(this.error);
+            },
+            descendDirectory: function (event) {
+                this.url = this.url + event.detail.dir + '/';
+            },
+            ascendDirectory: function () {
+                var path_components = this.url.split('/');
+                path_components.pop();
+                path_components.pop();
+                this.url = path_components.join('/') + '/'
+            },
+            showImage: function () {
+                console.log('Not implemented.')
+            },
+            urlChanged: function () {
+                this.isstartdir = this.url == this.starturl;
+            },
+            ready: function () {
+                this.url = this.starturl;
+            }
+        });
+    </script>
+</polymer-element>

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html ng-app>
+<html>
 <head>
-    <title>Tornado Gallery</title>
-    <link rel="stylesheet" type="text/css" media="all" href="stylesheet/style.css"/>
+    <!-- 1. Load platform support before any code that touches the DOM. -->
+    <script src="components/webcomponentsjs/webcomponents.min.js"></script>
+    <!-- 2. Load the component using an HTML Import -->
+    <link rel="import" href="elements/image-browser.html">
 </head>
 <body>
-    <div ng-view></div>
-    <script data-main="javascript/main" src="components/requirejs/require.js"></script>
+<!-- 3. Declare the element by its tag. -->
+<image-browser starturl="/filepath/"></image-browser>
 </body>
 </html>

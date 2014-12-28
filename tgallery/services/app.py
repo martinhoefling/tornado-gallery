@@ -1,22 +1,18 @@
-import os
-
+from pkg_resources import resource_filename
+from os import path
 import tornado.ioloop
 import tornado.web
+import logging
 from tornado.options import options, define
-
-from tgallery import module_locator
 from tgallery.handler.gallery_handler import GalleryHandler
 
+LOG = logging.getLogger()
 
-STATIC_PATH = os.path.join(module_locator.module_path(), 'static')
+STATIC_PATH = path.join(resource_filename('tgallery', '.'), 'static')
+
 
 define('picture_path', default='~/Pictures', help='Picture path exposed as gallery root.')
 define('debug', default='off', help='Set to "on" if debug mode (autoreloading) should be enabled.')
-
-
-class MainHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.write('Hello, this is tornado gallery.')
 
 
 def main():
@@ -32,8 +28,12 @@ def main():
         debug=debug
     )
     application.listen(1234)
+    LOG.info('Listening...')
+    LOG.info('Asset path is %s', STATIC_PATH)
+
     tornado.ioloop.IOLoop.instance().start()
 
 
 if __name__ == '__main__':
+    LOG = logging.getLogger('tgallery')
     main()
