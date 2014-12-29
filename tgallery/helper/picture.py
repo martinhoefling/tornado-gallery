@@ -1,4 +1,3 @@
-from __future__ import division
 import io
 
 from PIL import Image
@@ -6,8 +5,14 @@ from libxmp import XMPFiles, XMPError
 from libxmp import consts as xmpconsts
 
 import logging
+import time
+from helper.picture_cache import PictureCache
 
 LOG = logging.getLogger()
+
+
+def timing(msg, starttime):
+    LOG.debug('%s %f ms', msg, (time.time()-starttime) * 1000)
 
 
 class Picture(object):
@@ -18,7 +23,10 @@ class Picture(object):
 
     def _read_metadata(self):
         try:
+            startt=time.time()
             self.metadata = XMPFiles(file_path=self.filename).get_xmp()
+            timing('Metadata read in', startt)
+
         except XMPError:
             LOG.debug('Error reading xmp metadata for %s', self.filename)
 
@@ -31,15 +39,35 @@ class Picture(object):
             return 'Metadata could not be read for {}'.format(self.filename)
 
     def _read_image(self):
+        image = PictureCache.instance().lookup(self.filename)
+        if not image:
+            image = self._load_image()
+            PictureCache.instance().store(self.filename, image)
+        self.image = image
+
+    def _load_image(self):
+        startt=time.time()
         try:
-            self.image = Image.open(self.filename)
+            image = Image.open(self.filename)
         except OSError:
-            self.image = Image.new('RGB', (800, 800), 'white')
-        self.image.load()
+            image = Image.new('RGB', (800, 800), 'white')
+        image.load()
+        timing('Image read in', startt)
+        return image
 
     def resize(self, x_size, y_size):
+        lookup_key = self.filename + '/thumbnail/{}x{}'.format(x_size, y_size)
+        image = PictureCache.instance().lookup(lookup_key)
+        if not image:
+            image = self._do_resize(x_size, y_size)
+            PictureCache.instance().store(lookup_key, image)
+        self.image = image
+
+    def _do_resize(self, x_size, y_size):
         if not self.image:
             self._read_image()
+
+        startt = time.time()
 
         aspect_ratio = self.image.size[0] / self.image.size[1]
 
@@ -55,7 +83,9 @@ class Picture(object):
             x_target = 1
             y_target = 1
 
-        self.image = self.image.resize((x_target, y_target), Image.ANTIALIAS)
+        image = self.image.resize((x_target, y_target), Image.ANTIALIAS)
+        timing('Image resized in', startt)
+        return image
 
     def get_content(self):
         if not self.image:

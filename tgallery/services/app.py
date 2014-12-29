@@ -4,6 +4,7 @@ import tornado.ioloop
 import tornado.web
 import logging
 from tornado.options import options, define
+from helper.picture import PictureCache
 from tgallery.handler.gallery_handler import GalleryHandler
 
 LOG = logging.getLogger()
@@ -18,6 +19,9 @@ define('debug', default='off', help='Set to "on" if debug mode (autoreloading) s
 def main():
     options.parse_command_line()
     debug = options.debug == 'on'
+
+    PictureCache.init()
+
     application = tornado.web.Application(
         [
             (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': STATIC_PATH}),

@@ -3,14 +3,14 @@
 <polymer-element name="image-list" attributes="basedir images">
     <template>
         <template repeat="{{image in images}}">
-            <img on-click="{{imageSelected}}" src="{{basedir}}{{image.name}}/thumbnail/200x200" alt="{{image}}">
+            <img on-click="{{imageSelected}}" src="{{basedir}}{{image.name}}/thumbnail/200x200" alt="{{image.name}}">
         </template>
     </template>
     <script>
         Polymer({
             images: [],
             imageSelected: function (event) {
-                this.fire('image-selected', {dir: event.target.innerText});
+                this.fire('image-selected', {image: event.target.alt});
             },
 
         });

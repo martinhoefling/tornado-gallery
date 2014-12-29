@@ -1,0 +1,6 @@
+div#imageframe {
+    position: absolute;
+    background-color: aquamarine;
+    width: 90%;
+    height: 90%;
+}

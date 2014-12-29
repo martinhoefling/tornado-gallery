@@ -1,0 +1,43 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/core-ajax/core-ajax.html">
+<script type="text/javascript" src="../components/lodash/dist/lodash.min.js"></script>
+
+<polymer-element name="image-viewer" attributes="basedir images startimage activated">
+    <template>
+        <style>
+            #imageframe {
+                position:absolute;
+                top: 15px;
+                right: 15px;
+                bottom: 15px;
+                left: 15px;
+            }
+        </style>
+        <div hidden?="{{!activated}}" id="imageframe">
+            <template bind if="{{currentndx !== -1 }}">
+            <img src="{{basedir}}{{images[currentndx].name}}/thumbnail/{{currentWidth}}x{{currentHeight}}">
+            </template>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            basedir: '/anotherurl/',
+            images: [],
+            startimage: '',
+            currentndx: -1,
+            domReady: function () {
+                this.currentHeight = window.innerHeight - 2 * 15;
+                this.currentWidth = window.innerWidth - 2 * 15;
+            },
+            currentHeight: 1,
+            currentWidth: 1,
+            activated: false,
+            activatedChanged: function () {
+                this.currentndx = _.findIndex(this.images, function (img) {
+                    return img.name === this.startimage;
+                }, this);
+                console.log('Image viewer is now active, selected index is', this.currentndx);
+            }
+        });
+    </script>
+</polymer-element>

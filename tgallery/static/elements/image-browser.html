@@ -2,6 +2,7 @@
 <link rel="import" href="../components/core-ajax/core-ajax.html">
 <link rel="import" href="directory-list.html">
 <link rel="import" href="image-list.html">
+<link rel="import" href="image-viewer.html">
 
 <polymer-element name="image-browser" attributes="starturl">
     <template>
@@ -23,15 +24,23 @@
         <image-list
                 images="{{response.files}}"
                 basedir="{{url}}"
-                on-image-selected="{{showImage}}"
+                on-image-selected="{{setSelectedImage}}"
                 showdirup="{{!isstartdir}}"
         ></image-list>
+        <image-viewer
+                images="{{response.files}}"
+                basedir="{{url}}"
+                startimage="{{selectedImage}}"
+                activated="{{activeImageViewer}}"
+        ></image-viewer>
     </template>
     <script>
         Polymer({
             starturl: "/anotherurl/",
             url: "/someurl/",
             isstartdir: true,
+            activeImageViewer: false,
+            selectedImage: '',
             handleResponse: function () {
                 console.log(this.response);
             },
@@ -47,14 +56,19 @@
                 path_components.pop();
                 this.url = path_components.join('/') + '/'
             },
-            showImage: function () {
-                console.log('Not implemented.')
+            setSelectedImage: function (event) {
+                console.log('Selected image is now', event.detail.image);
+                this.selectedImage = event.detail.image;
             },
             urlChanged: function () {
                 this.isstartdir = this.url == this.starturl;
             },
             ready: function () {
                 this.url = this.starturl;
+            },
+            selectedImageChanged: function () {
+                console.log('Image viewer activated');
+                this.activeImageViewer = true;
             }
         });
     </script>
