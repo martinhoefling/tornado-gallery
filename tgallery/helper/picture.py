@@ -6,7 +6,6 @@ from libxmp import consts as xmpconsts
 
 import logging
 import time
-from helper.picture_cache import PictureCache
 
 LOG = logging.getLogger()
 
@@ -26,7 +25,6 @@ class Picture(object):
             startt=time.time()
             self.metadata = XMPFiles(file_path=self.filename).get_xmp()
             timing('Metadata read in', startt)
-
         except XMPError:
             LOG.debug('Error reading xmp metadata for %s', self.filename)
 
@@ -34,16 +32,13 @@ class Picture(object):
         if not self.metadata:
             self._read_metadata()
         try:
-            return {'rating': self.metadata.get_property(xmpconsts.XMP_NS_XMP, 'xmp:Rating')}
+            return {'rating': int(self.metadata.get_property(xmpconsts.XMP_NS_XMP, 'xmp:Rating'))}
         except XMPError:
             return 'Metadata could not be read for {}'.format(self.filename)
 
     def _read_image(self):
-        image = PictureCache.instance().lookup(self.filename)
-        if not image:
-            image = self._load_image()
-            PictureCache.instance().store(self.filename, image)
-        self.image = image
+        if not self.image:
+            self.image = self._load_image()
 
     def _load_image(self):
         startt=time.time()
@@ -56,14 +51,6 @@ class Picture(object):
         return image
 
     def resize(self, x_size, y_size):
-        lookup_key = self.filename + '/thumbnail/{}x{}'.format(x_size, y_size)
-        image = PictureCache.instance().lookup(lookup_key)
-        if not image:
-            image = self._do_resize(x_size, y_size)
-            PictureCache.instance().store(lookup_key, image)
-        self.image = image
-
-    def _do_resize(self, x_size, y_size):
         if not self.image:
             self._read_image()
 
@@ -83,9 +70,8 @@ class Picture(object):
             x_target = 1
             y_target = 1
 
-        image = self.image.resize((x_target, y_target), Image.ANTIALIAS)
+        self.image = self.image.resize((x_target, y_target), Image.ANTIALIAS)
         timing('Image resized in', startt)
-        return image
 
     def get_content(self):
         if not self.image:

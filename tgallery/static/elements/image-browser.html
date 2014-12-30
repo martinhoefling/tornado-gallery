@@ -41,9 +41,6 @@
             isstartdir: true,
             activeImageViewer: false,
             selectedImage: '',
-            handleResponse: function () {
-                console.log(this.response);
-            },
             handleError: function () {
                 console.log(this.error);
             },
@@ -61,6 +58,14 @@
                 this.selectedImage = event.detail.image;
             },
             urlChanged: function () {
+                if (this.response) {
+                    if (this.response.files) {
+                        this.response.files=[];
+                    }
+                    if (this.response.directories) {
+                        this.response.directories=[];
+                    }
+                }
                 this.isstartdir = this.url == this.starturl;
             },
             ready: function () {
