@@ -36,6 +36,18 @@ class Picture(object):
         except XMPError:
             return 'Metadata could not be read for {}'.format(self.filename)
 
+    def _set_metadata(self, namespace, param, value):
+        file = XMPFiles(file_path=self.filename, open_forupdate=True)
+        xmp = file.get_xmp()
+        xmp.set_property(namespace, param, value)
+        if not file.can_put_xmp(xmp):
+            raise OSError('Can not write metadata to {}'.format(self.filename))
+        file.put_xmp(xmp)
+        file.close_file()
+
+    def set_rating(self, rating):
+        self._set_metadata(xmpconsts.XMP_NS_XMP, 'xmp:Rating', str(rating))
+
     def _read_image(self):
         if not self.image:
             self.image = self._load_image()
@@ -81,3 +93,4 @@ class Picture(object):
         content = buf.getvalue()
         buf.close()
         return content
+

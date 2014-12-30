@@ -1,5 +1,6 @@
 <link rel="import" href="../components/polymer/polymer.html">
-<link rel="import" href="../components/core-ajax/core-ajax.html">
+<link rel="import" href="fivestar-rating.html">
+
 <script type="text/javascript" src="../components/lodash/dist/lodash.min.js"></script>
 
 <polymer-element name="image-viewer" attributes="basedir images startimage activated">
@@ -12,10 +13,32 @@
                 bottom: 15px;
                 left: 15px;
             }
+            .zerosize {
+                width: 0;
+                height: 0;
+            }
+            .displayed{
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            fivestar-rating {
+                position: absolute;
+                top: 15px;
+                left: 50%;
+                z-index: 2;
+                transform: translateX(-50%);
+            }
         </style>
         <div hidden?="{{!activated}}" id="imageframe">
             <template bind if="{{currentndx !== -1 }}">
-            <img src="{{basedir}}{{images[currentndx].name}}/thumbnail/{{currentWidth}}x{{currentHeight}}">
+            <fivestar-rating
+                rating="{{images[currentndx].metadata.rating}}"
+            ></fivestar-rating>
+            <img class="displayed" src="{{basedir}}{{images[currentndx].name}}/thumbnail/{{currentWidth}}x{{currentHeight}}">
+            <img class="zerosize" src="{{basedir}}{{images[prevndx].name}}/thumbnail/{{currentWidth}}x{{currentHeight}}">
+            <img class="zerosize" src="{{basedir}}{{images[nextndx].name}}/thumbnail/{{currentWidth}}x{{currentHeight}}">
             </template>
         </div>
     </template>
@@ -25,9 +48,35 @@
             images: [],
             startimage: '',
             currentndx: -1,
+            prevndx: -1,
+            nextndx: -1,
             domReady: function () {
                 this.currentHeight = window.innerHeight - 2 * 15;
                 this.currentWidth = window.innerWidth - 2 * 15;
+                var self = this;
+                document.onkeydown = function(event) {
+                    event = event || window.event;
+                    switch (event.which || event.keyCode) {
+                        case 37: // left
+                            self.currentndx = self.currentndx - 1;
+                            self.setAllIndices();
+                            break;
+
+                        case 39: // right
+                            self.currentndx = self.currentndx + 1;
+                            self.setAllIndices();
+                            break;
+
+                        case 27:
+                            self.currentndx = -1;
+                            self.activated = false;
+                            break;
+
+                        default:
+                            console.log('key pressed', event.which || event.keyCode);
+                            return; // exit this handler for other keys
+                    }
+                }
             },
             currentHeight: 1,
             currentWidth: 1,
@@ -36,7 +85,17 @@
                 this.currentndx = _.findIndex(this.images, function (img) {
                     return img.name === this.startimage;
                 }, this);
+                this.setAllIndices();
                 console.log('Image viewer is now active, selected index is', this.currentndx);
+            },
+            setAllIndices: function () {
+                var self = this;
+                function ndxToRange(index) {
+                    return (index < 0 ? index + self.images.length : index) % self.images.length;
+                }
+                this.currentndx = ndxToRange(this.currentndx);
+                this.prevndx = ndxToRange(this.currentndx - 1);
+                this.nextndx = ndxToRange(this.currentndx + 1);
             }
         });
     </script>

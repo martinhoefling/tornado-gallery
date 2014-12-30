@@ -2,6 +2,7 @@ tornado
 sphinx
 Pillow
 nose
+pylint
 logilab-astng
 coverage
 python-xmp-toolkit

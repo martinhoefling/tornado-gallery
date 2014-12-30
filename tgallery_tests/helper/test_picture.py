@@ -43,3 +43,8 @@ class TestPicture(unittest.TestCase):
         refcontent = buf.getvalue()
         buf.close()
         assert_equal(refcontent, content)
+
+    def test_write_metadata(self):
+        self.picture.set_rating(2)
+        assert_equal({'rating': 2}, self.picture.get_metadata())
+        generate_test_image()
