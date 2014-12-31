@@ -20,7 +20,7 @@
                 position: absolute;
             }
             span.ratedtrue {
-                color: blanchedalmond;
+                color: #ff9209;
             }
         </style>
         <div class="rating rating{{rating}}">
@@ -33,15 +33,20 @@
     </template>
     <script>
         Polymer({
-            rating: '0',
+            rating: 0,
             rate: function (event) {
-                var selected = _.findIndex([0, 1, 2, 3, 4, 5], function (ndx) {
-                    return event.target.classList.contains('rate' + ndx);
-                });
+                var newRating,
+                    selected = _.findIndex([0, 1, 2, 3, 4, 5], function (ndx) {
+                        return event.target.classList.contains('rate' + ndx);
+                    });
                 if (this.rating === selected) {
-                    this.rating = 0;
+                    newRating = 0;
                 } else {
-                    this.rating = selected;
+                    newRating = selected;
+                }
+                if (newRating !== this.rating) {
+                    this.fire('rating-changed', {new: newRating, old: this.rating});
+                    this.rating = newRating;
                 }
             }
         });

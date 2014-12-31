@@ -9,6 +9,20 @@ import time
 
 LOG = logging.getLogger()
 
+METADATA = [
+    {
+        'name': 'rating',
+        'namespace': xmpconsts.XMP_NS_XMP,
+        'attribute': 'xmp:Rating',
+        'type': int,
+        'default': 0
+    }
+]
+
+
+def _metadata_defaults():
+    return {meta['name']: meta['default'] for meta in METADATA}
+
 
 def timing(msg, starttime):
     LOG.debug('%s %f ms', msg, (time.time()-starttime) * 1000)
@@ -21,20 +35,25 @@ class Picture(object):
         self.image = None
 
     def _read_metadata(self):
-        try:
-            startt=time.time()
-            self.metadata = XMPFiles(file_path=self.filename).get_xmp()
-            timing('Metadata read in', startt)
-        except XMPError:
-            LOG.debug('Error reading xmp metadata for %s', self.filename)
+        self.metadata = XMPFiles(file_path=self.filename).get_xmp()
 
     def get_metadata(self):
-        if not self.metadata:
-            self._read_metadata()
         try:
-            return {'rating': int(self.metadata.get_property(xmpconsts.XMP_NS_XMP, 'xmp:Rating'))}
+            if not self.metadata:
+                self._read_metadata()
         except XMPError:
-            return 'Metadata could not be read for {}'.format(self.filename)
+            LOG.debug('Error reading xmp metadata for %s', self.filename)
+            return _metadata_defaults()
+
+        metadata = {}
+        for meta in METADATA:
+            try:
+                value = self.metadata.get_property(meta['namespace'], meta['attribute'])
+                metadata[meta['name']] = meta['type'](value)
+            except XMPError:
+                metadata[meta['name']] = meta['default']
+
+        return metadata
 
     def _set_metadata(self, namespace, param, value):
         file = XMPFiles(file_path=self.filename, open_forupdate=True)

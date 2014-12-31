@@ -1,0 +1,28 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="fivestar-rating.html">
+
+<script type="text/javascript" src="../components/lodash/dist/lodash.min.js"></script>
+
+<polymer-element name="image-display" attributes="basedir image width height">
+    <template>
+        <style>
+            fivestar-rating {
+                position: absolute;
+                top: 15px;
+                left: 50%;
+                z-index: 2;
+                transform: translateX(-50%);
+            }
+        </style>
+        <fivestar-rating
+                rating="{{image.metadata.rating}}"
+                ></fivestar-rating>
+        <img src="{{basedir}}{{image.name}}/thumbnail/{{width}}x{{height}}">
+    </template>
+    <script>
+        Polymer({
+            basedir: '/anotherurl/',
+            image: ''
+        });
+    </script>
+</polymer-element>
