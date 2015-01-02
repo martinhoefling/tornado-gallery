@@ -15,11 +15,13 @@ LOG = logging.getLogger()
 IMAGE_SUFFIX = ('jpeg', 'jpg')
 THUMBNAIL_REGEXP = re.compile(r'(.+)/thumbnail/(\d+)x(\d+)$')
 
+NO_METADATA_MSG = 'metadata not supported for this file.'
+
 
 class GalleryHandler(BaseHandler):
     def get(self, path):
-        if os.path.sep != "/":
-            path = path.replace("/", os.path.sep)
+        if os.path.sep != '/':
+            path = path.replace('/', os.path.sep)
 
         abs_path = self.get_validated_absolute_path(path)
 
@@ -27,10 +29,10 @@ class GalleryHandler(BaseHandler):
             raise HTTPError(NOT_FOUND, 'Directory {} not found'.format(path))
 
         self.set_header('Content-Type', 'image/jpeg')
-        response = self.get_content(abs_path)
+        response = self._get_content(abs_path)
         self.write(response)
 
-    def get_content(self, absolute_path):
+    def _get_content(self, absolute_path):
         response = {}
         entries = [(entry, os.path.join(absolute_path, entry)) for entry in os.listdir(absolute_path)]
         response['files'] = [{'name': entry, 'metadata': self._get_metadata(full_entry)}
@@ -43,6 +45,6 @@ class GalleryHandler(BaseHandler):
         if filename.lower().endswith(IMAGE_SUFFIX):
             return Picture(filename).get_metadata()
         else:
-            return 'metadata not supported for this file.'
+            return '%s' % NO_METADATA_MSG
 
 

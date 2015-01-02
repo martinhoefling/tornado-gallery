@@ -17,7 +17,7 @@ class MetadataHandler(BaseHandler):
         metadata = json.loads(str(self.request.body.decode()))
 
         if os.path.sep != "/":
-            path = filepath.replace("/", os.path.sep)
+            filepath = filepath.replace("/", os.path.sep)
 
         abs_path = self.get_validated_absolute_path(filepath)
 
