@@ -1,6 +1,8 @@
 from concurrent.futures import ProcessPoolExecutor
 import logging
-from tgallery.helper.base_service import BaseService
+
+from tgallery.services.base_service import BaseService
+
 
 LOG = logging.getLogger()
 

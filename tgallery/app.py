@@ -5,10 +5,11 @@ from tornado.web import StaticFileHandler
 import logging
 from tornado.options import options, define
 from tornado.process import cpu_count
+from tgallery.handler.metadata_handler import MetadataHandler
 from tgallery.handler.thumbnail_handler import ThumbnailHandler
 from tgallery.handler.gallery_handler import GalleryHandler
-from tgallery.helper.picture_cache import PictureCache
-from tgallery.helper.process_pool import ProcessPool
+from tgallery.services.picture_cache import PictureCache
+from tgallery.services.process_pool import ProcessPool
 LOG = logging.getLogger()
 
 STATIC_PATH = path.join(resource_filename('tgallery', '.'), 'static')
@@ -29,7 +30,8 @@ def main():
             (r'/static/(.+)', StaticFileHandler, {'path': STATIC_PATH}),
             (r'/filepath/()', GalleryHandler, {'path': options.picture_path}),
             (r'/filepath/(.+)/', GalleryHandler, {'path': options.picture_path}),
-            (r'/filepath/(.+/thumbnail/[0-9]+x[0-9]+)', ThumbnailHandler, {'path': options.picture_path}),
+            (r'/filepath/(.+)/thumbnail/([0-9]+)x([0-9]+)', ThumbnailHandler, {'path': options.picture_path}),
+            (r'/filepath/(.+)/metadata', MetadataHandler, {'path': options.picture_path}),
             (r'/filepath/(.+)', StaticFileHandler, {'path': options.picture_path}),
             (r'/(.*)', StaticFileHandler, {'path': STATIC_PATH, 'default_filename': 'index.html'}),
         ],

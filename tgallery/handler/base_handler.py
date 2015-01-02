@@ -1,6 +1,8 @@
 from http.client import FORBIDDEN
-from tornado.web import RequestHandler, os, HTTPError
 import logging
+
+from tornado.web import RequestHandler, os, HTTPError
+
 
 LOG = logging.getLogger()
 

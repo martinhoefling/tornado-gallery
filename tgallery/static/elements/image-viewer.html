@@ -52,15 +52,16 @@
         </style>
         <div hidden?="{{!activated}}" id="imageframe">
             <template bind if="{{currentndx !== -1 }}">
-            <div on-click="{{close}}" class="close">&#10006;</div>
             <image-display
                     class="displayed"
                     basedir="{{basedir}}"
                     image="{{images[currentndx]}}"
                     width="{{currentWidth}}"
-                    height="{{currentHeight}}">
+                    height="{{currentHeight}}"
+            ></image-display>
             <img class="zerosize" src="{{basedir}}{{images[prevndx].name}}/thumbnail/{{currentWidth}}x{{currentHeight}}">
             <img class="zerosize" src="{{basedir}}{{images[nextndx].name}}/thumbnail/{{currentWidth}}x{{currentHeight}}">
+            <div on-click="{{close}}" class="close">&#10006;</div>
             </template>
         </div>
     </template>

@@ -3,10 +3,12 @@ import json
 import logging
 import os
 import re
-from tornado.web import HTTPError
-from tgallery.handler.base_handler import BaseHandler
 
-from tgallery.helper.picture import Picture
+from tornado.web import HTTPError
+
+from tgallery.handler.base_handler import BaseHandler
+from tgallery.util.picture import Picture
+
 
 LOG = logging.getLogger()
 

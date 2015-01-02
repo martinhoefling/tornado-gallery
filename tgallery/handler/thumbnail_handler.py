@@ -1,19 +1,17 @@
-from http.client import NOT_FOUND, BAD_REQUEST
+from http.client import NOT_FOUND
 import logging
 import os
-import re
-from tornado import gen
 
+from tornado import gen
 from tornado.web import HTTPError
+
 from tgallery.handler.base_handler import BaseHandler
-from tgallery.helper.picture_cache import PictureCache
-from tgallery.helper.process_pool import ProcessPool
-from tgallery.helper.picture import Picture
+from tgallery.services.picture_cache import PictureCache
+from tgallery.services.process_pool import ProcessPool
+from tgallery.util.picture import Picture
+
 
 LOG = logging.getLogger()
-
-IMAGE_SUFFIX = ('jpeg', 'jpg')
-THUMBNAIL_REGEXP = re.compile(r'(.+)/thumbnail/(\d+)x(\d+)$')
 
 
 class ThumbnailHandler(BaseHandler):
@@ -23,16 +21,16 @@ class ThumbnailHandler(BaseHandler):
         super(ThumbnailHandler, self).__init__(*args, **kwargs)
 
     @gen.coroutine
-    def get(self, path):
-        LOG.debug('Getting thumbnail for %s', path)
+    def get(self, file_path, x_size, y_size):
+        LOG.debug('Getting thumbnail for %s', file_path)
         if os.path.sep != "/":
-            path = path.replace("/", os.path.sep)
+            path = file_path.replace("/", os.path.sep)
 
-        filepath, self.x_size, self.y_size = ThumbnailHandler._parse_path(path)
-        abs_path = self.get_validated_absolute_path(filepath)
+        self.x_size, self.y_size = int(x_size), int(y_size)
+        abs_path = self.get_validated_absolute_path(file_path)
 
         if not os.path.isfile(abs_path):
-            raise HTTPError(NOT_FOUND, 'File {} not found'.format(path))
+            raise HTTPError(NOT_FOUND, 'File {} not found'.format(file_path))
 
         self.set_header('Content-Type', 'image/jpeg')
 
@@ -45,14 +43,6 @@ class ThumbnailHandler(BaseHandler):
 
         self.write(thumbnail)
         self.finish()
-
-    @staticmethod
-    def _parse_path(path):
-        thumbnail = THUMBNAIL_REGEXP.search(path)
-        if not thumbnail:
-            raise HTTPError(BAD_REQUEST, 'Invalid thumbnail request {}'.format(path))
-        path, x_str, y_str = thumbnail.groups()
-        return path, int(x_str), int(y_str)
 
 
 def _gen_thumbnail_content(absolute_path, x_size, y_size):

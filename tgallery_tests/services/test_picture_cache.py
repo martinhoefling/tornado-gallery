@@ -1,7 +1,7 @@
 import unittest
 from nose.tools import assert_equal, assert_true
 import time
-from tgallery.helper.picture_cache import PictureCache
+from tgallery.services.picture_cache import PictureCache
 
 
 class TestPictureCache(unittest.TestCase):

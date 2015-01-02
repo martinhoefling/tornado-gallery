@@ -1,7 +1,9 @@
 from collections import OrderedDict
 import logging
 import time
-from tgallery.helper.base_service import BaseService
+
+from tgallery.services.base_service import BaseService
+
 
 LOG = logging.getLogger()
 

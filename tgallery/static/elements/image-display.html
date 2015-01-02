@@ -1,4 +1,6 @@
 <link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/core-ajax/core-ajax.html">
+
 <link rel="import" href="fivestar-rating.html">
 
 <script type="text/javascript" src="../components/lodash/dist/lodash.min.js"></script>
@@ -6,23 +8,50 @@
 <polymer-element name="image-display" attributes="basedir image width height">
     <template>
         <style>
+            div {
+                position: relative;
+            }
+            img {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
             fivestar-rating {
                 position: absolute;
                 top: 15px;
                 left: 50%;
-                z-index: 2;
                 transform: translateX(-50%);
             }
         </style>
+        <div style="width:{{width}}px;height:{{height}}px">
+        <img
+                on-click="{{imageClicked}}"
+                src="{{basedir}}{{image.name}}/thumbnail/{{width}}x{{height}}"
+                alt="{{image.name}}">
         <fivestar-rating
                 rating="{{image.metadata.rating}}"
-                ></fivestar-rating>
-        <img src="{{basedir}}{{image.name}}/thumbnail/{{width}}x{{height}}">
+                on-rating-changed="{{submitNewRating}}"
+        ></fivestar-rating>
+        </div>
+        <core-ajax
+            id="ratingajax"
+            url="{{basedir}}{{image.name}}/metadata"
+            method="PUT"
+            contentType="application/json"
+        ></core-ajax>    
     </template>
     <script>
         Polymer({
             basedir: '/anotherurl/',
-            image: ''
+            image: '',
+            imageClicked: function () {
+                this.fire('image-click');
+            },
+            submitNewRating: function (event) {
+                this.$.ratingajax.body = JSON.stringify({ rating: event.detail.new});
+                this.$.ratingajax.go();
+            }
         });
     </script>
 </polymer-element>
