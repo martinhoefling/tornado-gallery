@@ -1,5 +1,7 @@
 import unittest
+
 from nose.tools import assert_true, assert_false, assert_raises
+
 from tgallery.services.base_service import BaseService
 
 

@@ -1,14 +1,12 @@
 from http.client import NOT_FOUND, OK
 import json
 from unittest import mock
-import unittest
-import os
-from unittest.mock import Mock
 
 from nose.tools import assert_equal
 from tornado.httpclient import HTTPRequest
 from tornado.testing import AsyncHTTPTestCase
 from tornado.web import Application
+
 from tgallery.handler.metadata_handler import MetadataHandler
 
 

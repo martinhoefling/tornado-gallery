@@ -1,7 +1,9 @@
 from concurrent.futures import ProcessPoolExecutor
 import unittest
 from unittest.mock import Mock
+
 from nose.tools import assert_equal
+
 from tgallery.services.process_pool import ProcessPool
 
 

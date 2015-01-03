@@ -1,6 +1,8 @@
 import unittest
-from nose.tools import assert_equal, assert_true
 import time
+
+from nose.tools import assert_equal, assert_true
+
 from tgallery.services.picture_cache import PictureCache
 
 
