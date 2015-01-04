@@ -22,6 +22,6 @@ setup(
     test_suite='nose.collector',
     install_requires=REQUIREMENTS,
     entry_points={
-        'console_scripts': ['tgallery = tgallery.services.app:main'],
+        'console_scripts': ['tgallery = tgallery.app:main'],
         }
 )
