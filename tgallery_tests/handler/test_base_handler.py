@@ -3,7 +3,6 @@ import os
 from unittest.mock import Mock, patch
 
 from nose.tools import assert_raises
-
 from nose.tools import assert_equal
 from tornado.web import Application, HTTPError
 

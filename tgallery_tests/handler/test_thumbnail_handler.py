@@ -1,9 +1,11 @@
 from http.client import NOT_FOUND, OK
 from unittest import mock
+
 from nose.tools import assert_equal
 from tornado.concurrent import Future
 from tornado.testing import AsyncHTTPTestCase
 from tornado.web import Application
+
 from tgallery.handler.thumbnail_handler import ThumbnailHandler
 from tgallery.services.picture_cache import PictureCache
 from tgallery.services.process_pool import ProcessPool
