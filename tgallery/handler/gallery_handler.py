@@ -20,9 +20,6 @@ NO_METADATA_MSG = 'metadata not supported for this file.'
 
 class GalleryHandler(BaseHandler):
     def get(self, path):
-        if os.path.sep != '/':
-            path = path.replace('/', os.path.sep)
-
         abs_path = self.get_validated_absolute_path(path)
 
         if not os.path.isdir(abs_path):

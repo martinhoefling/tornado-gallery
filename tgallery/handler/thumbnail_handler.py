@@ -22,12 +22,8 @@ class ThumbnailHandler(BaseHandler):
 
     @gen.coroutine
     def get(self, file_path, x_size, y_size):
-        LOG.debug('Getting thumbnail for %s', file_path)
-        if os.path.sep != "/":
-            path = file_path.replace("/", os.path.sep)
-
-        self.x_size, self.y_size = int(x_size), int(y_size)
         abs_path = self.get_validated_absolute_path(file_path)
+        self.x_size, self.y_size = int(x_size), int(y_size)
 
         if not os.path.isfile(abs_path):
             raise HTTPError(NOT_FOUND, 'File {} not found'.format(file_path))

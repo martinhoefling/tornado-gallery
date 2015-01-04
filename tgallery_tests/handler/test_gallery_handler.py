@@ -38,18 +38,6 @@ class TestGalleryHandler(AsyncHTTPTestCase):
         assert_equal(b'jpegdata', response.body)
         get_content_mock.assert_called_once_with('/testdata/muh')
 
-    @mock.patch('tgallery.handler.gallery_handler.GalleryHandler._get_content')
-    @mock.patch('tgallery.handler.gallery_handler.os')
-    def test_get_gallery_rewrites_separators(self, os_mock, get_content_mock):
-        get_content_mock.return_value = 'jpegdata'
-        os_mock.path.sep = '#'
-        os_mock.path.isdir.return_value = True
-        self.http_client.fetch(self.get_url('/muh/maeh'), self.stop)
-        response = self.wait()
-        assert_equal(OK, response.code)
-        assert_equal(b'jpegdata', response.body)
-        get_content_mock.assert_called_once_with('/testdata/muh#maeh')
-
 
 class TestGalleryHandlerGetContent(unittest.TestCase):
     def setUp(self):
