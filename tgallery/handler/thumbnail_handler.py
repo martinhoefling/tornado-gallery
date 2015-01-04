@@ -1,4 +1,4 @@
-from http.client import NOT_FOUND
+from http.client import NOT_FOUND, BAD_REQUEST
 import logging
 import os
 
@@ -42,12 +42,10 @@ class ThumbnailHandler(BaseHandler):
 
 
 def _gen_thumbnail_content(absolute_path, x_size, y_size):
-    LOG.debug('start gen')
     picture = Picture(absolute_path)
     picture.resize(x_size, y_size)
-    content = picture.get_content()
-    LOG.debug('done')
-    return content
+    return picture.get_content()
+
 
 
 

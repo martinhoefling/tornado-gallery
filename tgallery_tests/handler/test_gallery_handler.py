@@ -20,7 +20,6 @@ class TestGalleryHandler(AsyncHTTPTestCase):
     @mock.patch('tgallery.handler.gallery_handler.os')
     def test_get_gallery_not_found(self, os_mock, get_content_mock):
         get_content_mock.return_value = 'jpegdata'
-        os_mock.path.sep = '/'
         os_mock.path.isdir.return_value = False
         self.http_client.fetch(self.get_url('/'), self.stop)
         response = self.wait()
@@ -30,7 +29,6 @@ class TestGalleryHandler(AsyncHTTPTestCase):
     @mock.patch('tgallery.handler.gallery_handler.os')
     def test_get_gallery_found(self, os_mock, get_content_mock):
         get_content_mock.return_value = 'jpegdata'
-        os_mock.path.sep = '/'
         os_mock.path.isdir.return_value = True
         self.http_client.fetch(self.get_url('/muh'), self.stop)
         response = self.wait()
