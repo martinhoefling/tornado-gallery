@@ -30,4 +30,7 @@ Polymer is used for the frontend.
 ... or use the Dockerfile to create a docker image.
 
 ##Running as docker container
-Pull image via `docker pull martinhoefling/tornado-gallery`, then start container `docker run -ti -v /home/martin/Pictures:/gallery martinhoefling/tornado-gallery`.
+Pull image via `docker pull martinhoefling/tornado-gallery`, then start container
+```
+docker run -ti -v /home/martin/Pictures:/gallery martinhoefling/tornado-gallery
+```
