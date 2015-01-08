@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/martinhoefling/tornado-gallery.svg?branch=master)](https://travis-ci.org/martinhoefling/tornado-gallery)
+
 #tornado-gallery
 *Image gallery and rating server.*
 
