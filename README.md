@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/martinhoefling/tornado-gallery.svg?branch=master)](https://travis-ci.org/martinhoefling/tornado-gallery)
-
+[![Requirements Status](https://requires.io/github/martinhoefling/tornado-gallery/requirements.svg?branch=master)](https://requires.io/github/martinhoefling/tornado-gallery/requirements/?branch=master)
 #tornado-gallery
 *Image gallery and rating server.*
 
