@@ -34,3 +34,8 @@ Pull image via `docker pull martinhoefling/tornado-gallery`, then start containe
 ```
 docker run -ti -v /home/martin/Pictures:/gallery martinhoefling/tornado-gallery
 ```
+
+##ToDo / missing features:
+
+* Image Cache Cleanup
+* Authentication
