@@ -1,0 +1,133 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="image-display.html">
+
+<script type="text/javascript" src="../components/lodash/dist/lodash.min.js"></script>
+
+<polymer-element name="image-viewer" attributes="basedir images startimage activated">
+    <template>
+        <style>
+            #imageframe {
+                position:absolute;
+                top: 15px;
+                right: 15px;
+                bottom: 15px;
+                left: 15px;
+            }
+            .zerosize {
+                width: 0;
+                height: 0;
+            }
+            .displayed {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            .close {
+                position:absolute;
+                top: 0;
+                right: 0;
+                width:25px;
+                height:25px;
+                display:block;
+                text-transform:uppercase;
+                text-decoration:none;
+                color:#fff;
+                background:#0394f9;
+                font-family:"Tahoma", Helvetica, sans-serif;
+                text-align:center;
+                font-size:20px;
+                line-height:1.2em;
+                border-radius:5px;
+                -moz-border-radius:5px;
+                -webkit-border-radius:5px;
+                -o-border-radius:5px;
+                -ms-border-radius:5px;
+                font-weight:bold;
+                box-shadow:0px 0px 2px 0px #666;
+                -moz-box-shadow:0px 0px 2px 0px #666;
+                -webkit-box-shadow:0px 0px 2px 0px #666;
+                text-indent:1px;
+            }
+        </style>
+        <div hidden?="{{!activated}}" id="imageframe">
+            <template bind if="{{currentndx !== -1 }}">
+            <image-display
+                    class="displayed"
+                    basedir="{{basedir}}"
+                    image="{{images[currentndx]}}"
+                    width="{{currentWidth}}"
+                    height="{{currentHeight}}"
+            ></image-display>
+            <img class="zerosize" src="{{basedir}}{{images[prevndx].name}}/thumbnail/{{currentWidth}}x{{currentHeight}}">
+            <img class="zerosize" src="{{basedir}}{{images[nextndx].name}}/thumbnail/{{currentWidth}}x{{currentHeight}}">
+            <div on-click="{{close}}" class="close">&#10006;</div>
+            </template>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            basedir: '/anotherurl/',
+            images: [],
+            startimage: '',
+            currentndx: -1,
+            prevndx: -1,
+            nextndx: -1,
+            domReady: function () {
+                this.currentHeight = window.innerHeight - 2 * 15;
+                this.currentWidth = window.innerWidth - 2 * 15;
+                var self = this;
+                document.onkeydown = function(event) {
+                    event = event || window.event;
+                    switch (event.which || event.keyCode) {
+                        case 37: // left
+                            self.currentndx = self.currentndx - 1;
+                            self.setAllIndices();
+                            break;
+
+                        case 39: // right
+                            self.currentndx = self.currentndx + 1;
+                            self.setAllIndices();
+                            break;
+
+                        case 27:
+                            self.currentndx = -1;
+                            self.prevndx = -1;
+                            self.nextndx = -1;
+                            self.activated = false;
+                            break;
+
+                        default:
+                            console.log('key pressed', event.which || event.keyCode);
+                            return; // exit this handler for other keys
+                    }
+                }
+            },
+            currentHeight: 1,
+            currentWidth: 1,
+            activated: false,
+            activatedChanged: function () {
+                this.currentndx = _.findIndex(this.images, function (img) {
+                    return img.name === this.startimage;
+                }, this);
+                this.setAllIndices();
+                console.log('Image viewer is now active, selected index is', this.currentndx);
+            },
+            setAllIndices: function () {
+                var self = this;
+                function ndxToRange(index) {
+                    return (index < 0 ? index + self.images.length : index) % self.images.length;
+                }
+                this.currentndx = ndxToRange(this.currentndx);
+                this.prevndx = ndxToRange(this.currentndx - 1);
+                this.nextndx = ndxToRange(this.currentndx + 1);
+            },
+            close: function () {
+                this.activated = false;
+                this.currentndx = -1;
+                this.prevndx = -1;
+                this.nextndx = -1;
+            }
+        });
+    </script>
+</polymer-element>

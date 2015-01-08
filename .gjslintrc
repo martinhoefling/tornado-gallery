@@ -1,0 +1,7 @@
+--jslint_error=blank_lines_at_top_level
+--jsdoc=true
+--max_line_length=120
+--disable=1,11,121
+#  1: Extra space after function
+# 11: Missing semicolon after function assigned to a variable
+# 121: Illegal comma at the end of object literal

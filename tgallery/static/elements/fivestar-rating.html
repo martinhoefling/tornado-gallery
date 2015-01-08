@@ -1,0 +1,55 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/core-ajax/core-ajax.html">
+<script type="text/javascript" src="../components/lodash/dist/lodash.min.js"></script>
+
+<polymer-element name="fivestar-rating" attributes="rating">
+    <template>
+        <style>
+            .rating {
+                unicode-bidi: bidi-override;
+                direction: rtl;
+                width: 105px;
+            }
+            .rating > span {
+                display: inline-block;
+                position: relative;
+                width: 1.1em;
+            }
+            .rating > span:hover:before,
+            .rating > span:hover ~ span:before {
+                content: "\2605";
+                position: absolute;
+            }
+            span.ratedtrue {
+                color: #ff9209;
+            }
+        </style>
+        <div class="rating rating{{rating}}">
+            <span on-click="{{rate}}" class="rate5 rated{{rating > 4}}">☆</span>
+            <span on-click="{{rate}}" class="rate4 rated{{rating > 3}}">☆</span>
+            <span on-click="{{rate}}" class="rate3 rated{{rating > 2}}">☆</span>
+            <span on-click="{{rate}}" class="rate2 rated{{rating > 1}}">☆</span>
+            <span on-click="{{rate}}" class="rate1 rated{{rating > 0}}">☆</span>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            rating: 0,
+            rate: function (event) {
+                var newRating,
+                    selected = _.findIndex([0, 1, 2, 3, 4, 5], function (ndx) {
+                        return event.target.classList.contains('rate' + ndx);
+                    });
+                if (this.rating === selected) {
+                    newRating = 0;
+                } else {
+                    newRating = selected;
+                }
+                if (newRating !== this.rating) {
+                    this.fire('rating-changed', {new: newRating, old: this.rating});
+                    this.rating = newRating;
+                }
+            }
+        });
+    </script>
+</polymer-element>

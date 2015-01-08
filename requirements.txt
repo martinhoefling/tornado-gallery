@@ -1,0 +1,3 @@
+tornado==4.0.2
+Pillow==2.7.0
+python-xmp-toolkit==2.0.1

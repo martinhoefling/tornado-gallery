@@ -1,0 +1,90 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/core-ajax/core-ajax.html">
+<link rel="import" href="directory-list.html">
+<link rel="import" href="image-list.html">
+<link rel="import" href="image-viewer.html">
+
+<polymer-element name="image-browser" attributes="starturl">
+    <template>
+        <core-ajax
+                url="{{url}}"
+                auto
+                response="{{response}}"
+                error="{{error}}"
+                handleAs="json"
+                on-core-response={{handleResponse}}
+                on-core-error={{handleError}}
+        ></core-ajax>
+        <directory-list
+                directories="{{response.directories}}"
+                on-directory-selected="{{descendDirectory}}"
+                on-directory-up="{{ascendDirectory}}"
+                showdirup="{{!isstartdir}}"
+        ></directory-list>
+        <image-list
+                images="{{response.files}}"
+                basedir="{{url}}"
+                on-image-selected="{{setSelectedImage}}"
+                showdirup="{{!isstartdir}}"
+        ></image-list>
+        <image-viewer
+                images="{{response.files}}"
+                basedir="{{url}}"
+                startimage="{{selectedImage}}"
+                activated="{{activeImageViewer}}"
+        ></image-viewer>
+    </template>
+    <script>
+        Polymer({
+            starturl: "/anotherurl/",
+            url: "/someurl/",
+            isstartdir: true,
+            activeImageViewer: false,
+            selectedImage: '',
+            handleResponse: function () {
+                console.log(this.response);
+            },
+            handleError: function () {
+                console.log(this.error);
+            },
+            descendDirectory: function (event) {
+                this.url = this.url + event.detail.dir + '/';
+            },
+            ascendDirectory: function () {
+                var path_components = this.url.split('/');
+                path_components.pop();
+                path_components.pop();
+                this.url = path_components.join('/') + '/'
+            },
+            setSelectedImage: function (event) {
+                console.log('Selected image is now', event.detail.image);
+                this.selectedImage = event.detail.image;
+            },
+            urlChanged: function () {
+                if (this.response) {
+                    if (this.response.files) {
+                        this.response.files=[];
+                    }
+                    if (this.response.directories) {
+                        this.response.directories=[];
+                    }
+                }
+                this.isstartdir = this.url == this.starturl;
+            },
+            ready: function () {
+                this.url = this.starturl;
+            },
+            selectedImageChanged: function () {
+                if (this.selectedImage) {
+                    console.log('Image viewer activated');
+                    this.activeImageViewer = true;
+                }
+            },
+            activeImageViewerChanged: function () {
+                if (!this.activeImageViewer) {
+                    this.selectedImage = '';
+                }
+            }
+        });
+    </script>
+</polymer-element>

@@ -1,0 +1,24 @@
+<link rel="import" href="../components/polymer/polymer.html">
+
+<polymer-element name="directory-list" attributes="directories showdirup">
+    <template>
+        <template bind if="{{showdirup}}">
+            <button on-click="{{directoryUp}}">.. (up)</button>
+        </template>
+        <template repeat="{{directory in directories}}">
+        <button on-click="{{directorySelected}}">{{directory}}</button>
+        </template>
+    </template>
+    <script>
+        Polymer({
+            directories: [],
+            showdirup: false,
+            directorySelected: function (event) {
+                this.fire('directory-selected', {dir: event.target.innerText});
+            },
+            directoryUp: function() {
+                this.fire('directory-up');
+            }
+        });
+    </script>
+</polymer-element>
