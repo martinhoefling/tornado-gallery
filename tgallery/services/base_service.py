@@ -13,7 +13,7 @@ class BaseService(object):
 
     @classmethod
     def instance(cls):
-        assert cls._instance, 'Service {} not initialized yet'.format(cls.__name__)
+        assert cls._instance, 'Service {0} not initialized yet'.format(cls.__name__)
         return cls._instance
 
     @classmethod

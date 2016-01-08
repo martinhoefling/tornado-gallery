@@ -18,7 +18,7 @@ class MetadataHandler(BaseHandler):
         abs_path = self.get_validated_absolute_path(file_path)
 
         if not os.path.isfile(abs_path):
-            raise HTTPError(NOT_FOUND, 'File {} not found'.format(file_path))
+            raise HTTPError(NOT_FOUND, 'File {0} not found'.format(file_path))
 
         picture = Picture(abs_path)
         picture.set_metadata(metadata)

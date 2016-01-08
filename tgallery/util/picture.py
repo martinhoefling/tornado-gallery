@@ -71,7 +71,7 @@ class Picture(object):
             file.close_file()
 
         except XMPError:
-            LOG.debug('writing metadata for {} failed'.format(self.filename))
+            LOG.debug('writing metadata for {0} failed'.format(self.filename))
             raise MetadataWriteException('Writing metadata failed.')
 
     def _read_image(self):

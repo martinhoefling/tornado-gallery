@@ -23,7 +23,7 @@ class GalleryHandler(BaseHandler):
         abs_path = self.get_validated_absolute_path(path)
 
         if not os.path.isdir(abs_path):
-            raise HTTPError(NOT_FOUND, 'Directory {} not found'.format(path))
+            raise HTTPError(NOT_FOUND, 'Directory {0} not found'.format(path))
 
         self.set_header('Content-Type', 'image/jpeg')
         response = self._get_content(abs_path)
