@@ -20,7 +20,8 @@ class AnotherService(BaseService):
 
 
 class TestBaseService(unittest.TestCase):
-    def test_init_separate_services(self):
+    @staticmethod
+    def test_init_separate_services():
         assert_false(AService.initialized())
         assert_false(AnotherService.initialized())
         assert_raises(AssertionError, AService.instance)

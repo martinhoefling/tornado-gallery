@@ -15,7 +15,7 @@ class PictureCache(BaseService):
         self._cached_pictures = OrderedDict()
 
     def lookup(self, imagepath):
-        image = self._cached_pictures.get(imagepath, None)
+        image = self._cached_pictures.get(imagepath)
         if image:
             LOG.debug('Image %s in cache', imagepath)
             image['timestamp'] = time.time()

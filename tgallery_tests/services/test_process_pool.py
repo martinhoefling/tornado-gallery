@@ -12,17 +12,20 @@ def tfunc(a):
 
 
 class TestProcessPool(unittest.TestCase):
-    def test_pool_initialization(self):
+    @staticmethod
+    def test_pool_initialization():
         ProcessPool.init(max_workers=1)
         ppool = ProcessPool.instance()
         assert_equal(type(ppool.pool), ProcessPoolExecutor)
 
-    def test_auto_pool_initialization(self):
+    @staticmethod
+    def test_auto_pool_initialization():
         ProcessPool.init()
         ppool = ProcessPool.instance()
         assert_equal(type(ppool.pool), ProcessPoolExecutor)
 
-    def test_submit_passthrough(self):
+    @staticmethod
+    def test_submit_passthrough():
         ProcessPool.init()
         ppool = ProcessPool.instance()
         ppool.pool.submit = Mock()

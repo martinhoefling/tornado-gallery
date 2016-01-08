@@ -13,7 +13,8 @@ from tgallery.handler.gallery_handler import GalleryHandler, NO_METADATA_MSG
 
 
 class TestGalleryHandler(AsyncHTTPTestCase):
-    def get_app(self):
+    @staticmethod
+    def get_app():
         return Application([('/(.*)', GalleryHandler, {'path': '/testdata'})])
 
     @mock.patch('tgallery.handler.gallery_handler.GalleryHandler._get_content')

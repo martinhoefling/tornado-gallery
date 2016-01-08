@@ -37,8 +37,8 @@ class GalleryHandler(BaseHandler):
         response['directories'] = [entry for entry, full_entry in entries if os.path.isdir(full_entry)]
         return json.dumps(response)
 
-    @classmethod
-    def _get_metadata(cls, filename):
+    @staticmethod
+    def _get_metadata(filename):
         if filename.lower().endswith(IMAGE_SUFFIX):
             return Picture(filename).get_metadata()
         else:

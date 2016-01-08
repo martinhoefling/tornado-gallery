@@ -11,7 +11,8 @@ from tgallery.handler.metadata_handler import MetadataHandler
 
 
 class TestMetadataHandler(AsyncHTTPTestCase):
-    def get_app(self):
+    @staticmethod
+    def get_app():
         return Application([('/(.*)', MetadataHandler, {'path': '/testdata'})])
 
     @mock.patch('tgallery.handler.metadata_handler.os')
