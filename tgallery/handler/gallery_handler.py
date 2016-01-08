@@ -42,6 +42,6 @@ class GalleryHandler(BaseHandler):
         if filename.lower().endswith(IMAGE_SUFFIX):
             return Picture(filename).get_metadata()
         else:
-            return '%s' % NO_METADATA_MSG
+            return '{0!s}'.format(NO_METADATA_MSG)
 
 
