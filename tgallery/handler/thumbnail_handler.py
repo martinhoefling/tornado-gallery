@@ -26,14 +26,14 @@ class ThumbnailHandler(BaseHandler):
         self.x_size, self.y_size = int(x_size), int(y_size)
 
         if not os.path.isfile(abs_path):
-            raise HTTPError(NOT_FOUND, 'File {} not found'.format(file_path))
+            raise HTTPError(NOT_FOUND, 'File {0} not found'.format(file_path))
 
         self.set_header('Content-Type', 'image/jpeg')
 
-        thumbnail_key = '{}/thumbnail/{}x{}'.format(abs_path, self.x_size, self.y_size)
+        thumbnail_key = '{0}/thumbnail/{1}x{2}'.format(abs_path, self.x_size, self.y_size)
         thumbnail = PictureCache.instance().lookup(thumbnail_key)
         if not thumbnail:
-            LOG.debug('submitting thumbnail generation for {} size {} {}'.format(abs_path, self.x_size, self.y_size))
+            LOG.debug('submitting thumbnail generation for {0} size {1} {2}'.format(abs_path, self.x_size, self.y_size))
             thumbnail = yield ProcessPool.instance().submit(_gen_thumbnail_content, abs_path, self.x_size, self.y_size)
             PictureCache.instance().store(thumbnail_key, thumbnail)
 
