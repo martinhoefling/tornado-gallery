@@ -2,6 +2,7 @@
 [![Requirements Status](https://requires.io/github/martinhoefling/tornado-gallery/requirements.svg?branch=master)](https://requires.io/github/martinhoefling/tornado-gallery/requirements/?branch=master)
 
 # tornado-gallery
+
 *Image gallery and rating server.*
 
 tornado-gallery serves a specified directory structure containing images / galleries to modern web browsers.
@@ -31,6 +32,7 @@ Polymer is used for the frontend.
 ... or use the Dockerfile to create a docker image.
 
 ## Running as docker container
+
 Pull image via `docker pull martinhoefling/tornado-gallery`, then start container
 ```
 docker run -ti -v /home/martin/Pictures:/gallery martinhoefling/tornado-gallery
